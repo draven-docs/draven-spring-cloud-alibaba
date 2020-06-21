@@ -18,3 +18,13 @@
 #    enabled: true
 mysql:
   url: haha
+spring:
+  cloud:
+    stream:
+      rocketmq:
+        binder:
+          name-server: localhost:9876
+      bindings:
+        output:
+          destination: topicTest
+          group: test-group1
