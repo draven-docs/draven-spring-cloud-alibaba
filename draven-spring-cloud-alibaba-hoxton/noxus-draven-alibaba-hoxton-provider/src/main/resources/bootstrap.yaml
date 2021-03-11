@@ -1,3 +1,9 @@
+nacos:
+  server-addr: 127.0.0.1:8848
+  username: nacos
+  password: nacos
+  namespace: native-group
+
 spring:
   application:
     name: alibaba-provider
@@ -6,10 +12,11 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: 127.0.0.1:8849
+        server-addr: 127.0.0.1:8848
         file-extension: yaml
         group: NATIVE_GROUP
-        namespace: 7d7282e8-1906-460e-8729-0492358c4b2b
+        #namespace: 7d7282e8-1906-460e-8729-0492358c4b2b
+        namespace: native-group
         extension-configs[0]: # 括号内的值越大优先级越高
           refresh: true # 自动刷新
           data-id: redis.yaml # 扩展文件名称
@@ -18,18 +25,146 @@ spring:
           data-id: mysql.yaml
           group: NATIVE_GROUP
           refresh: true
+        username: nacos
+        password: nacos
       discovery:
-        server-addr: 127.0.0.1:8849
+        server-addr: 127.0.0.1:8848
         service: ${spring.application.name}
         group: NATIVE_GROUP
-        namespace: 7d7282e8-1906-460e-8729-0492358c4b2b
+        #namespace: 7d7282e8-1906-460e-8729-0492358c4b2b
+        namespace: native-group
         #        ip: 116.196.77.250
         #        port: 8848
         #
-#    alibaba:
-#      seata:
-#        tx-service-group: default
+        username: nacos
+        password: nacos
+    sentinel:
+      transport:
+        port: 8719
+        client-ip: localhost
+        dashboard: localhost:8849
+      eager: true
+      datasource:
+        flow:
+          nacos:
+            server-addr: localhost:8848
+            namespace: native-group
+            group-id: NATIVE_GROUP
+#            username: nacos
+#            password: nacos
+            data-id: ${spring.application.name}-flow-rules
+            # 规则类型，取值见：
+            # org.springframework.cloud.alibaba.sentinel.datasource.RuleType
+            rule-type: flow
+            data-type: json
+        degrade:
+          nacos:
+            server-addr: ${nacos.server-addr}
+            username: ${nacos.username}
+            password: ${nacos.password}
+            namespace: ${nacos.namespace}
+            groupId: NATIVE_GROUP
+            dataId: ${spring.application.name}-degrade-rules
+            rule-type: degrade
+          param-flow:
+            nacos:
+              server-addr: ${nacos.server-addr}
+              username: ${nacos.username}
+              password: ${nacos.password}
+              namespace: ${nacos.namespace}
+              groupId: NATIVE_GROUP
+              dataId: ${spring.application.name}-param-rules
+              rule-type: param-flow
+          system:
+            nacos:
+              server-addr: ${nacos.server-addr}
+              username: ${nacos.username}
+              password: ${nacos.password}
+              namespace: ${nacos.namespace}
+              groupId: NATIVE_GROUP
+              dataId: ${spring.application.name}-system-rules
+              rule-type: system
+          authority:
+            nacos:
+              server-addr: ${nacos.server-addr}
+              username: ${nacos.username}
+              password: ${nacos.password}
+              namespace: ${nacos.namespace}
+              groupId: NATIVE_GROUP
+              dataId: ${spring.application.name}-authority-rules
+              rule-type: authority
+    alibaba:
+      seata:
+        tx-service-group: alibaba-provider #-seata-tx-service-group
+    stream:
+      rocketmq:
+        binder:
+          name-server: localhost:9876
 
+      bindings:
+        output:
+          destination: test-topic
+          content-type: application/json
+        input:
+          destination: test-topic
+          content-type: application/json
+          group: test-group
+
+  main:
+    allow-bean-definition-overriding: true
+  zipkin:
+    base-url: http://localhost:9411
 feign:
   sentinel:
     enabled: true
+
+seata:
+  enabled: true
+  application-id: alibaba-provider
+  tx-service-group: my_test_tx_group
+  enable-auto-data-source-proxy: true
+  service:
+    vgroup-mapping:
+      my_test_tx_group: default
+    #    grouplist:
+    #      default: 127.0.0.1:8091
+    enable-degrade: false
+    disable-global-transaction: false
+    #disable-global-transaction: false
+  config:
+    type: nacos
+    nacos:
+      namespace: seata-group
+      serverAddr: 127.0.0.1:8848
+      group: SEATA_GROUP
+      userName: "nacos"
+      password: "nacos"
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: 127.0.0.1:8848
+      group: SEATA_GROUP
+      namespace: seata-group
+      userName: "nacos"
+      password: "nacos"
+
+
+
+#spring:
+#  cloud:
+#    sentinel:
+#      transport:
+#        port: 8719
+#        client-ip: localhost
+#        dashboard: localhost:8849
+#      eager: true
+#      datasource:
+#        ds1:
+#          nacos:
+#            server-addr: localhost:8848
+#            #namespace: sentinel_group
+#            dataId: ${spring.application.name}-flow-rules
+#            groupId: SENTINEL_GROUP
+#            data-type: json
+#            rule-type: flow
