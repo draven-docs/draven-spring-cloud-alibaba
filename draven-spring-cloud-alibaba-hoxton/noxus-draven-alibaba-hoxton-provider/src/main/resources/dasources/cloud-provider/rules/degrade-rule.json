@@ -1,0 +1,1 @@
+[{"count":1000.0,"grade":0,"limitApp":"default","minRequestAmount":4,"resource":"/provider/getString","slowRatioThreshold":0.5,"statIntervalMs":1000,"timeWindow":1}]
