@@ -1,0 +1,82 @@
+#server:
+#  port: 9999
+## spring:
+##   cloud:
+##     sentinel:
+##       transport:
+##         port: 8850
+##         dashboard: 116.196.77.250:8849
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: '*'
+#feign:
+#  httpclient:
+#    enabled: false
+#  okhttp:
+#    enabled: true
+mysql:
+  url: haha
+spring:
+  cloud:
+    stream:
+      rocketmq:
+        binder:
+          name-server: localhost:9876
+      bindings:
+        output:
+          destination: topicTest
+          group: test-group1
+
+#  datasource:
+#    #    type: com.alibaba.druid.pool.DruidDataSource
+#    #    druid:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: ${MYSQL_USER:root}
+#    password: ${MYSQL_PWD:12345678}
+#    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/${MYSQL_DB:db_account}?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8&allowMultiQueries=true&allowPublicKeyRetrieval=true
+
+
+
+
+#seata:
+#  enabled: true
+#  application-id: alibaba-provider
+#  tx-service-group: my_test_tx_group
+#  enable-auto-data-source-proxy: true
+#  service:
+#    vgroup-mapping:
+#      my_test_tx_group: default
+##    grouplist:
+##      default: 127.0.0.1:8091
+#    enable-degrade: false
+#    disable-global-transaction: false
+#    #disable-global-transaction: false
+#  config:
+#    type: nacos
+#    nacos:
+#      namespace: 4dad9a92-3a8e-4456-992f-03433d9320ad
+#      serverAddr: 127.0.0.1:8849
+#      group: SEATA_GROUP
+#      userName: "nacos"
+#      password: "nacos"
+#  registry:
+#    type: nacos
+#    nacos:
+#      application: seata-server
+#      server-addr: 127.0.0.1:8849
+#      group: SEATA_GROUP
+#      namespace: 4dad9a92-3a8e-4456-992f-03433d9320ad
+#      userName: "nacos"
+#      password: "nacos"
+
+
+
+
+
+#mybatis:
+#  mapper-locations: classpath:mapper/seata/*.xml
+#  type-aliases-package: com.noxus.draven.alibaba.hoxton.consumer.entity.seata
+
+

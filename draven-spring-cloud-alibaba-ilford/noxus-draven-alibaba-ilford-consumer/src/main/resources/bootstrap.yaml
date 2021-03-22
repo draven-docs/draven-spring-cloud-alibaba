@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: alibaba-consumer
+  profiles:
+    active: native
+  cloud:
+    #    inetutils:
+    #      default-hostname: 127.0.0.1
+    #      default-ip-address: 127.0.0.1
+    #      ignored-interfaces: eth0
+    #      preferred-networks: 192.168.3.100
+
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yaml
+        group: NATIVE_GROUP
+        namespace: native-group
+        ext-config[0]: # 括号内的值越大优先级越高
+          refresh: true # 自动刷新
+          data-id: redis.yaml # 扩展文件名称
+          group: NATIVE_GROUP # 分组
+        shared-configs[0]:
+          data-id: mysql.yaml
+          group: NATIVE_GROUP
+          refresh: true
+        username: nacos
+        password: nacos
+      discovery:
+        server-addr: 127.0.0.1:8848
+        #networkInterface: eth0
+        #        metadata:
+        #          management:
+        #            context-path: /actuator
+        service: ${spring.application.name}
+        group: NATIVE_GROUP
+        namespace: native-group
+        username: nacos
+        password: nacos
+        #        ip: 116.196.77.250
+        #        port: 8848
+        #
+    alibaba:
+      seata:
+        tx-service-group: alibaba-consumer #-seata-tx-service-group
+
+
+  main:
+    allow-bean-definition-overriding: true
+  zipkin:
+    base-url: http://localhost:9411
+feign:
+  sentinel:
+    enabled: true
+
+redis: wawa
