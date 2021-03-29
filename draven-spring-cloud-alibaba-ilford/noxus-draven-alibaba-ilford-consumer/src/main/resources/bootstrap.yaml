@@ -12,7 +12,7 @@ spring:
 
     nacos:
       config:
-        server-addr: 127.0.0.1:8848
+        server-addr: 10.211.55.5:8849
         file-extension: yaml
         group: NATIVE_GROUP
         namespace: native-group
@@ -27,7 +27,7 @@ spring:
         username: nacos
         password: nacos
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: 10.211.55.5:8849
         #networkInterface: eth0
         #        metadata:
         #          management:
@@ -42,8 +42,63 @@ spring:
         #
     alibaba:
       seata:
-        tx-service-group: alibaba-consumer #-seata-tx-service-group
+        tx-service-group: my_test_tx_group #alibaba-consumer #-seata-tx-service-group
 
+    sentinel:
+      transport:
+        port: 8719
+        #client-ip: localhost
+        dashboard: 10.211.55.5:8858
+      eager: true
+      datasource:
+        flow:
+          nacos:
+            server-addr: ${spring.cloud.nacos.config.server-addr}
+            namespace: native-group
+            group-id: NATIVE_GROUP
+            username: nacos
+            password: nacos
+            data-id: ${spring.application.name}-flow-rules
+            # 规则类型，取值见：
+            # org.springframework.cloud.alibaba.sentinel.datasource.RuleType
+            rule-type: flow
+            data-type: json
+        degrade:
+          nacos:
+            server-addr: ${spring.cloud.nacos.config.server-addr}
+            username: ${spring.cloud.nacos.config.username}
+            password: ${spring.cloud.nacos.config..password}
+            namespace: ${spring.cloud.nacos.config..namespace}
+            groupId: NATIVE_GROUP
+            dataId: ${spring.application.name}-degrade-rules
+            rule-type: degrade
+          param-flow:
+            nacos:
+              server-addr: ${spring.cloud.nacos.config.server-addr}
+              username: ${spring.cloud.nacos.config.username}
+              password: ${spring.cloud.nacos.config..password}
+              namespace: ${spring.cloud.nacos.config..namespace}
+              groupId: NATIVE_GROUP
+              dataId: ${spring.application.name}-param-rules
+              rule-type: param-flow
+          system:
+            nacos:
+              server-addr: ${spring.cloud.nacos.config.server-addr}
+              username: ${spring.cloud.nacos.config.username}
+              password: ${spring.cloud.nacos.config..password}
+              namespace: ${spring.cloud.nacos.config..namespace}
+              groupId: NATIVE_GROUP
+              dataId: ${spring.application.name}-system-rules
+              rule-type: system
+          authority:
+            nacos:
+              server-addr: ${spring.cloud.nacos.config.server-addr}
+              username: ${spring.cloud.nacos.config.username}
+              password: ${spring.cloud.nacos.config..password}
+              namespace: ${spring.cloud.nacos.config..namespace}
+              groupId: NATIVE_GROUP
+              dataId: ${spring.application.name}-authority-rules
+              rule-type: authority
 
   main:
     allow-bean-definition-overriding: true
@@ -54,3 +109,44 @@ feign:
     enabled: true
 
 redis: wawa
+server:
+  port: 8081
+  servlet:
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true
+
+mysql:
+  url: oo
+
+seata:
+  enabled: true
+  application-id: alibaba-provider
+  tx-service-group: my_test_tx_group
+  enable-auto-data-source-proxy: true
+  service:
+    vgroup-mapping:
+      my_test_tx_group: default
+    #    grouplist:
+    #      default: 127.0.0.1:8091
+    enable-degrade: false
+    disable-global-transaction: false
+    #disable-global-transaction: false
+  config:
+    type: nacos
+    nacos:
+      namespace: seata-group
+      serverAddr: ${spring.cloud.nacos.config.server-addr}
+      group: SEATA_GROUP
+      userName: "nacos"
+      password: "nacos"
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: ${spring.cloud.nacos.config.server-addr}
+      group: SEATA_GROUP
+      namespace: seata-group
+      userName: "nacos"
+      password: "nacos"
