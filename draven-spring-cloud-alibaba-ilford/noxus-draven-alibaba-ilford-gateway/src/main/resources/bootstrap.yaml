@@ -1,18 +1,26 @@
+
 spring:
   application:
     name: alibaba-gateway
   profiles:
     active: native
   cloud:
+    loadbalancer:
+      cache:
+        enabled: true
+      ribbon:
+        enabled: false
     nacos:
       config:
-        server-addr: 127.0.0.1:8848
+        server-addr: 10.211.55.5:8849
         file-extension: yaml
         group: NATIVE_GROUP
         namespace: native-group
         #7d7282e8-1906-460e-8729-0492358c4b2b
+        username: nacos
+        password: nacos
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: 10.211.55.5:8849
         service: ${spring.application.name}
         group: NATIVE_GROUP
         namespace: native-group
@@ -20,4 +28,107 @@ spring:
         #        ip: 116.196.77.250
         #        port: 8848
         #
+        username: nacos
+        password: nacos
+    sentinel:
+      transport:
+        port: 8719
+        #client-ip: localhost
+        dashboard: 127.0.0.1:8849 #10.211.55.5:8858
+      eager: true
+      datasource:
+        flow:
+          nacos:
+            server-addr: ${spring.cloud.nacos.config.server-addr}
+            namespace: native-group
+            group-id: NATIVE_GROUP
+            username: nacos
+            password: nacos
+            data-id: ${spring.application.name}-flow-rules
+            # 规则类型，取值见：
+            # org.springframework.cloud.alibaba.sentinel.datasource.RuleType
+            rule-type: flow
+            data-type: json
+        degrade:
+          nacos:
+            server-addr: ${spring.cloud.nacos.config.server-addr}
+            username: ${spring.cloud.nacos.config.username}
+            password: ${spring.cloud.nacos.config..password}
+            namespace: ${spring.cloud.nacos.config..namespace}
+            groupId: NATIVE_GROUP
+            dataId: ${spring.application.name}-degrade-rules
+            rule-type: degrade
+          param-flow:
+            nacos:
+              server-addr: ${spring.cloud.nacos.config.server-addr}
+              username: ${spring.cloud.nacos.config.username}
+              password: ${spring.cloud.nacos.config..password}
+              namespace: ${spring.cloud.nacos.config..namespace}
+              groupId: NATIVE_GROUP
+              dataId: ${spring.application.name}-param-rules
+              rule-type: param-flow
+          system:
+            nacos:
+              server-addr: ${spring.cloud.nacos.config.server-addr}
+              username: ${spring.cloud.nacos.config.username}
+              password: ${spring.cloud.nacos.config..password}
+              namespace: ${spring.cloud.nacos.config..namespace}
+              groupId: NATIVE_GROUP
+              dataId: ${spring.application.name}-system-rules
+              rule-type: system
+          authority:
+            nacos:
+              server-addr: ${spring.cloud.nacos.config.server-addr}
+              username: ${spring.cloud.nacos.config.username}
+              password: ${spring.cloud.nacos.config..password}
+              namespace: ${spring.cloud.nacos.config..namespace}
+              groupId: NATIVE_GROUP
+              dataId: ${spring.application.name}-authority-rules
+              rule-type: authority
+          gw-flow:
+            nacos:
+              server-addr: ${spring.cloud.nacos.config.server-addr}
+              username: ${spring.cloud.nacos.config.username}
+              password: ${spring.cloud.nacos.config..password}
+              namespace: ${spring.cloud.nacos.config..namespace}
+              groupId: NATIVE_GROUP
+              dataId: ${spring.application.name}-gw-flow
+              rule-type: gw-flow
+          gw-api-group:
+            nacos:
+              server-addr: ${spring.cloud.nacos.config.server-addr}
+              username: ${spring.cloud.nacos.config.username}
+              password: ${spring.cloud.nacos.config..password}
+              namespace: ${spring.cloud.nacos.config..namespace}
+              groupId: NATIVE_GROUP
+              dataId: ${spring.application.name}-gw-api
+              rule-type: gw-api-group
+
+
+
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: alibaba-consumer
+          uri: lb://alibaba-consumer:8081/ilfordCon/fegin/consumer
+          predicates:
+            - Path=/ilfordCon/fegin/consumer
+            - Method=GET
+        - id: demos
+          uri: lb://alibaba-prodiver:8080/ilfordCon/fegin/consumer
+          predicates:
+            - Path=/ilfordCon/consumer
+            - Method=GET
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+server:
+  port: 10086
+
 

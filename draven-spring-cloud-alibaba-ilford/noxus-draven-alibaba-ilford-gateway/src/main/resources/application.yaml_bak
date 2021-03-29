@@ -3,15 +3,16 @@ server:
 spring:
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
+#      discovery:
+#        locator:
+#          enabled: true
+#          lower-case-service-id: true
       routes:
         - id: before_route
           uri: localhost:8888
           predicates:
             - Method=GET
+            -
 management:
   endpoints:
     web:

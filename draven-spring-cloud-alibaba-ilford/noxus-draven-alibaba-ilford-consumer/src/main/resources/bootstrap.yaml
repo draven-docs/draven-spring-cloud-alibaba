@@ -107,6 +107,9 @@ spring:
 feign:
   sentinel:
     enabled: true
+  circuitbreaker:
+    enabled: true
+
 
 redis: wawa
 server:

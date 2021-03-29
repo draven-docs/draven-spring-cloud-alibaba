@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class IlfordGateWayAlibabaApplication {
 
     public static void main(String[] args) {
+
+        System.setProperty("csp.sentinel.app.type", "1");
         SpringApplication.run(IlfordGateWayAlibabaApplication.class, args);
     }
 
