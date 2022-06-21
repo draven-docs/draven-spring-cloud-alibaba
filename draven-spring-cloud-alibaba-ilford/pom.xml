@@ -21,7 +21,7 @@
         <spring-boot-admin.version>2.2.0</spring-boot-admin.version>
         <lombok.version>1.18.10</lombok.version>
         <zipkin.version>2.11.8</zipkin.version>
-        <mysql.version>8.0.20</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
         <spring.boot.version>2.4.4</spring.boot.version>
         <mybatis.starter.version>2.1.1</mybatis.starter.version>
     </properties>
